@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+#==============================================================================
+# PARSE COMMAND LINE OPTIONS
+#==============================================================================
+
+require 'optparse'
+
+options = { :action => :run }
+
+daemonize_help = "run daemonized in the background (default: false)"
+pidfile_help   = "the pid filename (default when daemonized: /var/run/<app_id>.pid)"
+logfile_help   = "the log filename (default when daemonized: /var/log/<app_id>.log)"
+include_help   = "an additional $LOAD_PATH (may be used more than once)"
+debug_help     = "set $DEBUG to true"
+warn_help      = "enable warnings"
+
+op = OptionParser.new
+op.banner =  "An example of how to daemonize a long running Ruby process."
+op.separator ""
+op.separator "Usage: server [options]"
+op.separator ""
+
+op.separator ""
+op.separator "Process options:"
+op.on("-d", "--daemonize",   daemonize_help) {         options[:daemonize] = true  }
+op.on("-p", "--pid PIDFILE", pidfile_help)   { |value| options[:pidfile]   = value }
+op.on("-l", "--log LOGFILE", logfile_help)   { |value| options[:logfile]   = value }
+
+op.separator ""
+op.separator "Ruby options:"
+op.on("-I", "--include PATH", include_help) { |value| $LOAD_PATH.unshift(*value.split(":").map{|v| File.expand_path(v)}) }
+op.on(      "--debug",        debug_help)   { $DEBUG = true }
+op.on(      "--warn",         warn_help)    { $-w = true    }
+
+op.separator ""
+op.separator "Common options:"
+op.on("-h", "--help")    { options[:action] = :help    }
+op.on("-v", "--version") { options[:action] = :version }
+
+op.separator ""
+op.parse!(ARGV)
+
+#==============================================================================
+# EXECUTE script
+#==============================================================================
+
+require 'server' unless options[:action] == :help
+
+case options[:action]
+when :help    then puts op.to_s
+when :version then puts Server::VERSION
+else
+  Server.run!(options)
+end
+
+#==============================================================================
+
