@@ -10,8 +10,8 @@ require 'optparse'
 options = { :action => :run }
 
 daemonize_help = "run daemonized in the background (default: false)"
-pidfile_help   = "the pid filename (default when daemonized: /var/run/<app_id>.pid)"
-logfile_help   = "the log filename (default when daemonized: /var/log/<app_id>.log)"
+pidfile_help   = "the pid filename"
+logfile_help   = "the log filename"
 include_help   = "an additional $LOAD_PATH (may be used more than once)"
 debug_help     = "set $DEBUG to true"
 warn_help      = "enable warnings"
