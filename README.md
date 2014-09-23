@@ -2,7 +2,7 @@
 
 An example of how to daemonize a long running Ruby process.
 
->> _(blog article coming soon)_
+>> http://codeincomplete.com/posts/2014/9/15/ruby_daemons/
 
 ## License
 
